@@ -1,12 +1,12 @@
 
 <h1 align="center">
-  <img src="https://raw.githubusercontent.com/4thokage/mttgo/master/.github/images/title.png" width="224px"/><br/>
+  <img src="https://github.com/4thokage/mtggo/blob/main/.github/images/title.png" /><br/>
+  Simple CLI to help with MTG card management
 </h1>
-Simple CLI to help with MTG card management
 
+[![Go Report Card](https://goreportcard.com/badge/github.com/4thokage/mtggo)](https://goreportcard.com/report/github.com/4thokage/mtggo)
 ## Getting started
 
-
-
+A binary release can be downloaded [here](https://github.com/4thokage/mtggo/releases).
 
 ## Usage & Examples
