@@ -10,3 +10,15 @@
 A binary release can be downloaded [here](https://github.com/4thokage/mtggo/releases).
 
 ## Usage & Examples
+Available Commands:
+
+| Command | Description |
+| --------------- | --------------- |
+| completion | Generate the autocompletion script for the specified shell |
+| help       | Help about any command |
+| mana       | Calculates deck mana needs
+| price      | Fetches card prices
+| proxy      | Generates a pdf with card proxy images
+
+
+Use "mtggo [command] --help" for more information about a command.
