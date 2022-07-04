@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github.com/spf13/cobra"
 	"log"
+	"strings"
 )
 
 // priceCmd represents the price command
@@ -17,11 +18,7 @@ var priceCmd = &cobra.Command{
 		} else {
 			for _, element := range args {
 				for _, card := range scry(element) {
-					var foil = ""
-					if card.Foil {
-						foil = "FOIL"
-					}
-					info := fmt.Sprintf("%s%s - (%s) %s: [EUR: %s, USD: %s, TIX: %s]", card.Name, card.ManaCost, card.SetName, foil, card.Prices.EUR, card.Prices.USD, card.Prices.Tix)
+					info := fmt.Sprintf("%s%s - (%s) %s: [EUR: %s, USD: %s, TIX: %s]", card.Name, card.ManaCost, card.SetName, strings.Replace(strings.Trim(fmt.Sprint(card.Finishes), "[]"), " ", ",", -1), card.Prices.EUR, card.Prices.USD, card.Prices.Tix)
 					log.Println(info)
 				}
 
