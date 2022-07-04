@@ -31,6 +31,6 @@ func Execute() {
 }
 
 func init() {
-	rootCmd.PersistentFlags().StringVar(&deckFile, "d", "", "Deck list file")
+	rootCmd.PersistentFlags().StringVarP(&deckFile, "deck", "d", "", "Deck list file")
 
 }

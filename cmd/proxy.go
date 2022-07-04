@@ -4,9 +4,54 @@ import (
 	"github.com/jung-kurt/gofpdf"
 	"github.com/jung-kurt/gofpdf/contrib/httpimg"
 	"github.com/spf13/cobra"
+	"log"
 	"path/filepath"
-	"strings"
+	"time"
 )
+
+type coordinate struct {
+	x float64
+	y float64
+}
+
+var cardGrid = []coordinate{
+	{
+		x: 0,
+		y: 0,
+	},
+	{
+		x: 0,
+		y: 88.9,
+	},
+	{
+		x: 0,
+		y: 177.8,
+	},
+	{
+		x: 63.5,
+		y: 0,
+	},
+	{
+		x: 63.5,
+		y: 88.9,
+	},
+	{
+		x: 63.5,
+		y: 177.8,
+	},
+	{
+		x: 127,
+		y: 0,
+	},
+	{
+		x: 127,
+		y: 88.9,
+	},
+	{
+		x: 127,
+		y: 177.8,
+	},
+}
 
 // proxyCmd represents the price command
 var proxyCmd = &cobra.Command{
@@ -16,32 +61,22 @@ var proxyCmd = &cobra.Command{
 	Run: func(cmd *cobra.Command, args []string) {
 		pdf := gofpdf.New("P", "mm", "A4", "")
 		pdf.AddPage()
-		pdf.SetFont("Arial", "B", 16)
-		var name = strings.Join(args, "_")
+
+		var name = time.Now().Format("01-01-1998")
+		log.Println(name)
 		if deckFile != "" {
 			var extension = filepath.Ext(deckFile)
 			name = deckFile[0 : len(deckFile)-len(extension)]
 		} else {
-			cardCounter := 0
-			rowNum := float64(0)
-			for index, element := range args {
 
-				if index != 0 && index%3 == 0 {
-					rowNum++
-					cardCounter = 0
-				}
-				if index != 0 && index%9 == 0 {
-					rowNum = 0
-					cardCounter = 0
-					pdf.AddPage()
-				}
-				y := rowNum * 88.9
-				x := float64(cardCounter) * 63.5
+			var counter = 0
+			for _, element := range args {
+
 				url := scry(element)[0].ImageURIs.Normal
 				httpimg.Register(pdf, url, "")
 				pdf.ImageOptions(
 					url,
-					x, y,
+					cardGrid[counter].x, cardGrid[counter].y,
 					63.5, 88.9,
 					false,
 					gofpdf.ImageOptions{ImageType: "JPG", ReadDpi: true},
@@ -49,7 +84,11 @@ var proxyCmd = &cobra.Command{
 					url,
 				)
 
-				cardCounter++
+				counter++
+				if counter == 9 {
+					counter = 0
+					pdf.AddPage()
+				}
 
 			}
 		}
