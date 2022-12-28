@@ -86,8 +86,3 @@ func scrySpecific(card MTGCard) []scryfall.Card {
 	return result.Cards
 
 }
-
-func getPriceFromBulkData(cards []MTGCard) float64 {
-	log.Println("Getting total price fom bulk data", cards)
-	return 0
-}

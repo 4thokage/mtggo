@@ -53,6 +53,8 @@ var cardGrid = []coordinate{
 	},
 }
 
+var counter = 0
+
 // proxyCmd represents the proxy command
 var proxyCmd = &cobra.Command{
 	Use:   "proxy",
@@ -70,31 +72,23 @@ var proxyCmd = &cobra.Command{
 
 			cards := fromFile(deckFile, fileType)
 
-			var counter = 0
 			for _, element := range cards {
 
-				url := scry(element.Name)[0].ImageURIs
-				if url == nil {
-					continue
-				}
-				urlNormal := url.Normal
-				httpimg.Register(pdf, urlNormal, "")
-				pdf.ImageOptions(
-					urlNormal,
-					cardGrid[counter].x, cardGrid[counter].y,
-					63.5, 88.9,
-					false,
-					gofpdf.ImageOptions{ImageType: "JPG", ReadDpi: true},
-					0,
+				card := scryExact(element.Name)
+				url := card.ImageURIs
 
-					urlNormal,
-				)
+				if len(card.CardFaces) > 0 {
+					for _, face := range card.CardFaces {
+						addCardImage(pdf, face.ImageURIs.Normal)
+					}
 
-				counter++
-				if counter == 9 {
-					counter = 0
-					pdf.AddPage()
+				} else {
+					if url == nil {
+						continue
+					}
+					addCardImage(pdf, url.Normal)
 				}
+
 			}
 			err := pdf.OutputFileAndClose(name + "_PROXIES.pdf")
 			if err != nil {
@@ -103,26 +97,10 @@ var proxyCmd = &cobra.Command{
 
 		} else {
 
-			var counter = 0
 			for _, element := range args {
 
 				url := scry(element)[0].ImageURIs.Normal
-				httpimg.Register(pdf, url, "")
-				pdf.ImageOptions(
-					url,
-					cardGrid[counter].x, cardGrid[counter].y,
-					63.5, 88.9,
-					false,
-					gofpdf.ImageOptions{ImageType: "JPG", ReadDpi: true},
-					0,
-					url,
-				)
-
-				counter++
-				if counter == 9 {
-					counter = 0
-					pdf.AddPage()
-				}
+				addCardImage(pdf, url)
 
 			}
 			err := pdf.OutputFileAndClose(name + "_PROXIES.pdf")
@@ -132,6 +110,25 @@ var proxyCmd = &cobra.Command{
 		}
 
 	},
+}
+
+func addCardImage(pdf *gofpdf.Fpdf, urlNormal string) {
+	httpimg.Register(pdf, urlNormal, "")
+	pdf.ImageOptions(
+		urlNormal,
+		cardGrid[counter].x, cardGrid[counter].y,
+		63.5, 88.9,
+		false,
+		gofpdf.ImageOptions{ImageType: "JPG", ReadDpi: true},
+		0,
+		urlNormal,
+	)
+
+	counter++
+	if counter == 9 {
+		counter = 0
+		pdf.AddPage()
+	}
 }
 
 func init() {

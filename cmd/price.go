@@ -6,6 +6,7 @@ import (
 	"log"
 	"strconv"
 	"strings"
+	"time"
 )
 
 // priceCmd represents the price command
@@ -19,11 +20,6 @@ var priceCmd = &cobra.Command{
 			cards := fromFile(deckFile, fileType)
 			var totalPriceEur float64
 
-			// if card list is bigger than 100 cards (cube or collection) use scryfall bulk data instead
-			if len(cards) > 100 {
-				log.Println(getPriceFromBulkData(cards))
-				return
-			}
 			for _, element := range cards {
 				for _, card := range scrySpecific(element) {
 					priceEur, _ := strconv.ParseFloat(card.Prices.EUR, 64)
@@ -31,6 +27,7 @@ var priceCmd = &cobra.Command{
 						totalPriceEur += priceEur
 					}
 				}
+				time.Sleep(60 * time.Millisecond)
 			}
 			log.Println(totalPriceEur)
 		} else {
