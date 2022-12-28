@@ -49,13 +49,6 @@ func scryExact(cardName string) scryfall.Card {
 
 }
 
-func TrimSuffix(s, suffix string) string {
-	if strings.HasSuffix(s, suffix) {
-		s = s[:len(s)-len(suffix)]
-	}
-	return s
-}
-
 func scrySpecific(card MTGCard) []scryfall.Card {
 	ctx := context.Background()
 	client, err := scryfall.NewClient()
@@ -70,8 +63,8 @@ func scrySpecific(card MTGCard) []scryfall.Card {
 		IncludeExtras: false,
 	}
 	lastCharNumber := card.Number[len(card.Number)-1:]
-	card.Number = TrimSuffix(card.Number, "p")
-	card.Number = TrimSuffix(card.Number, "d")
+	card.Number = strings.TrimSuffix(card.Number, "p")
+	card.Number = strings.TrimSuffix(card.Number, "d")
 
 	query := fmt.Sprintf("!\"%s\" e:%s is:%s number:%s",
 		card.Name,
