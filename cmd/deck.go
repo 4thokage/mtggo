@@ -118,9 +118,9 @@ func fromMTGO(f *os.File) []MTGCard {
 
 	var cardList []MTGCard
 	countRegex, err := regexp.Compile(`^[^\d]*(\d+)`)
-	nameRegex, err := regexp.Compile(`\b([a-zA-Z,]+.*)`)
-	if err != nil {
-		log.Fatal(err)
+	nameRegex, err2 := regexp.Compile(`\b([a-zA-Z,]+.*)`)
+	if err != nil || err2 != nil {
+		log.Fatal("Error compiling regex, exiting")
 	}
 	for _, text := range lines {
 		var rec MTGCard
