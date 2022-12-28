@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github.com/spf13/cobra"
 	"log"
+	"strconv"
 	"strings"
 )
 
@@ -15,6 +16,23 @@ var priceCmd = &cobra.Command{
 	Run: func(cmd *cobra.Command, args []string) {
 
 		if deckFile != "" {
+			cards := fromFile(deckFile, fileType)
+			var totalPriceEur float64
+
+			// if card list is bigger than 100 cards (cube or collection) use scryfall bulk data instead
+			if len(cards) > 100 {
+				log.Println(getPriceFromBulkData(cards))
+				return
+			}
+			for _, element := range cards {
+				for _, card := range scrySpecific(element) {
+					priceEur, _ := strconv.ParseFloat(card.Prices.EUR, 64)
+					if element.Status != "Proxied" {
+						totalPriceEur += priceEur
+					}
+				}
+			}
+			log.Println(totalPriceEur)
 		} else {
 			for _, element := range args {
 				for _, card := range scry(element) {

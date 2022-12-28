@@ -53,7 +53,7 @@ var cardGrid = []coordinate{
 	},
 }
 
-// proxyCmd represents the price command
+// proxyCmd represents the proxy command
 var proxyCmd = &cobra.Command{
 	Use:   "proxy",
 	Short: "Generates a pdf with card proxy images",
@@ -65,8 +65,42 @@ var proxyCmd = &cobra.Command{
 		var name = time.Now().Format("01-01-1998")
 		log.Println(name)
 		if deckFile != "" {
-			var extension = filepath.Ext(deckFile)
-			name = deckFile[0 : len(deckFile)-len(extension)]
+
+			name = deckFile[0 : len(deckFile)-len(filepath.Ext(deckFile))]
+
+			cards := fromFile(deckFile, fileType)
+
+			var counter = 0
+			for _, element := range cards {
+
+				url := scry(element.Name)[0].ImageURIs
+				if url == nil {
+					continue
+				}
+				urlNormal := url.Normal
+				httpimg.Register(pdf, urlNormal, "")
+				pdf.ImageOptions(
+					urlNormal,
+					cardGrid[counter].x, cardGrid[counter].y,
+					63.5, 88.9,
+					false,
+					gofpdf.ImageOptions{ImageType: "JPG", ReadDpi: true},
+					0,
+
+					urlNormal,
+				)
+
+				counter++
+				if counter == 9 {
+					counter = 0
+					pdf.AddPage()
+				}
+			}
+			err := pdf.OutputFileAndClose(name + "_PROXIES.pdf")
+			if err != nil {
+				panic(err)
+			}
+
 		} else {
 
 			var counter = 0
@@ -91,12 +125,12 @@ var proxyCmd = &cobra.Command{
 				}
 
 			}
+			err := pdf.OutputFileAndClose(name + "_PROXIES.pdf")
+			if err != nil {
+				panic(err)
+			}
 		}
 
-		err := pdf.OutputFileAndClose(name + "_PROXIES.pdf")
-		if err != nil {
-			panic(err)
-		}
 	},
 }
 

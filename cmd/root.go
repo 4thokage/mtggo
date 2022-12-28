@@ -8,6 +8,7 @@ import (
 )
 
 var deckFile string
+var fileType string
 
 var rootCmd = &cobra.Command{
 	Use:   "mtggo",
@@ -31,6 +32,7 @@ func Execute() {
 }
 
 func init() {
-	rootCmd.PersistentFlags().StringVarP(&deckFile, "deck", "d", "", "Deck list file")
+	rootCmd.PersistentFlags().StringVarP(&deckFile, "deck", "d", "", "Deck/collection file")
+	rootCmd.PersistentFlags().StringVarP(&fileType, "type", "t", "", "file type (CSV_CUBE_COBRA,CSV_URZA_GATHERER,MTGO")
 
 }

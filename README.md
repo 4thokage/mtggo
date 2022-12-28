@@ -1,6 +1,6 @@
 
 <h1 align="center">
-  <img src="https://github.com/4thokage/mtggo/blob/main/.github/images/title.png" /><br/>
+  <img src="https://github.com/4thokage/mtggo/blob/main/.github/images/title.png"  alt="mtg:go logo"/><br/>
   Simple CLI to help with MTG card management
 </h1>
 
@@ -14,7 +14,7 @@ Available Commands:
 
 | Command | Description |
 | --------------- | --------------- |
-| completion | Generate the autocompletion script for the specified shell |
+| - | convert from/to various deck or collection formats |
 | help       | Help about any command |
 | mana       | Calculates deck mana needs
 | price      | Fetches card prices
